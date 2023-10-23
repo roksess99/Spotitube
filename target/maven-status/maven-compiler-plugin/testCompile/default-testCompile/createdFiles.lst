@@ -1,0 +1,9 @@
+nl\han\oose\dea\dao\PlaylistsDAOTest.class
+nl\han\oose\dea\dao\TracksDAOTest.class
+nl\han\oose\dea\resources\LoginResourceTest.class
+nl\han\oose\dea\services\PlaylistServiceTest.class
+nl\han\oose\dea\services\TracksServiceTest.class
+nl\han\oose\dea\services\LoginServiceTest.class
+nl\han\oose\dea\dao\UserDAOTest.class
+nl\han\oose\dea\resources\PlaylistResourceTest.class
+nl\han\oose\dea\resources\TracksResourceTest.class
