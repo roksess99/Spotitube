@@ -3,14 +3,13 @@ package nl.han.oose.dea.Entity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class TrackEntityTest {
 
     @Test
-    void trackEntityTest(){
+    void trackEntityTest() {
+        //Arrange
         Date date = new Date();
         TrackEntity track = new TrackEntity();
         track.setId(1);
@@ -23,8 +22,9 @@ public class TrackEntityTest {
         track.setDescription("The best music ever");
         track.setOffline(true);
 
+        //Assert
         Assertions.assertEquals(track.getId(), 1);
-        Assertions.assertEquals(track.getTitle(),"Last Day on Earth" );
+        Assertions.assertEquals(track.getTitle(), "Last Day on Earth");
         Assertions.assertEquals(track.getSinger(), "Rody");
         Assertions.assertEquals(track.getDuration(), 430);
         Assertions.assertEquals(track.getAlbum(), "DAY / DAY");
@@ -35,9 +35,11 @@ public class TrackEntityTest {
     }
 
     @Test
-    void trackEntityNullTest(){
+    void trackEntityNullTest() {
+        //Arrange
         TrackEntity track = new TrackEntity();
 
+        //Assert
         Assertions.assertEquals(track.getId(), 0);
         Assertions.assertNull(track.getTitle());
         Assertions.assertNull(track.getSinger());

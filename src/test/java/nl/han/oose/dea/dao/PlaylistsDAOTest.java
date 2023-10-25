@@ -21,7 +21,6 @@ public class PlaylistsDAOTest {
     private Connection mockedConnection;
     private ResultSet mockedResultSet;
 
-
     @BeforeEach
     void setUp() {
         this.sut = Mockito.spy(new PlaylistsDAO());
@@ -138,10 +137,12 @@ public class PlaylistsDAOTest {
         Mockito.when(sut.startQuery(query)).thenReturn(mockedPreparedStatement);
         Mockito.when(mockedPreparedStatement.executeQuery()).thenThrow(new SQLException());
 
+        //Act
         DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
             sut.getPlaylistLength(playlist);
         });
 
+        //Assert
         Assertions.assertEquals("playlist lengte ophalen mislukt", exception.getMessage());
     }
 
@@ -206,6 +207,7 @@ public class PlaylistsDAOTest {
 
     @Test
     void shouldEditPlaylistWhenEditPlaylist() throws SQLException {
+        //Arrange
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setId(1);
         playlist.setName("New playlist name");
@@ -223,6 +225,7 @@ public class PlaylistsDAOTest {
 
     @Test
     void shouldThrowExceptionWhenEditPlaylist() throws SQLException {
+        //Arrange
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setId(1);
         playlist.setName("New playlist name");
@@ -230,31 +233,45 @@ public class PlaylistsDAOTest {
         Mockito.doThrow(new SQLException()).when(mockedPreparedStatement).execute();
         Mockito.doReturn(mockedPreparedStatement).when(sut).startQuery(sql);
 
+        //Act
         DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
             sut.editPlaylist(playlist);
         });
+
+        //Assert
         Assertions.assertEquals("Het updaten van playlist: " + playlist.getName() + " is mislukt", exception.getMessage());
     }
 
-    //    @Test
-//    void shouldGetPlaylistTrackWhenGetPlaylistTrack() throws SQLException {
-//        int playlistId = 1;
-//        TracksEntity tracks;
-//        String sql = "SELECT playlist_id, track_id FROM playlist_track WHERE playlist_id = ?";
-//        Mockito.when(sut.startQuery(sql)).thenReturn(mockedPreparedStatement);
-//        Mockito.when(mockedPreparedStatement.setInt(1, playlistId)).thenReturn(mockedPreparedStatement);
-//        Mockito.when(mockedPreparedStatement.executeQuery()).thenReturn(mockedResultSet);
-//        Mockito.doReturn(mockedPreparedStatement).when(mockedPreparedStatement).setInt(1,playlistId);
-//        Mockito.when(mockedPreparedStatement.executeQuery()).thenReturn(mockedResultSet);
-//        Mockito.when(mockedResultSet.next()).thenReturn(true);
-//        Mockito.when(mockedResultSet.getInt("track_id")).thenReturn(1);
-//
-//        tracks = this.sut.getPlaylistTracks(playlistId);
-//
-//    }
-// TODO: 18-Oct-23 throwexception test for getPlaylistTracks 
+    @Test
+    void shouldGetPlaylistTrackWhenGetPlaylistTrack() throws SQLException {
+        //Arrange
+        PlaylistEntity playlist = new PlaylistEntity();
+        String sql = "SELECT playlist_id, track_id FROM playlist_track WHERE playlist_id = ?";
+        playlist.setId(1);
+        TracksEntity tracks = new TracksEntity();
+        tracks.addTrack(new TrackEntity(1, "Track 1", "Artist 1", 180, "Album 1", 100, null, null, false));
+        Mockito.when(mockedPreparedStatement.executeQuery()).thenReturn(mockedResultSet);
+        Mockito.when(mockedResultSet.next()).thenReturn(true).thenReturn(false);
+        Mockito.when(mockedResultSet.getInt("track_id")).thenReturn(1);
+        Mockito.when(mockedResultSet.getString("title")).thenReturn("Track 1");
+        Mockito.when(mockedResultSet.getString("singer")).thenReturn("Artist 1");
+        Mockito.when(mockedResultSet.getInt("duration")).thenReturn(180);
+        Mockito.when(mockedResultSet.getString("album")).thenReturn("Album 1");
+        Mockito.when(mockedResultSet.getInt("play_count")).thenReturn(100);
+        Mockito.doReturn(mockedPreparedStatement).when(sut).startQuery(sql);
+
+        //Act
+        TracksEntity result = this.sut.getPlaylistTracks(playlist.getId());
+
+        //Assert
+        Mockito.verify(mockedPreparedStatement).setInt(1, playlist.getId());
+        Mockito.verify(sut).startQuery(sql);
+        Assertions.assertNotNull(result);
+    }
+
     @Test
     void shouldGetTrackWhenGetTrack() throws SQLException {
+        //Arrange
         TracksEntity tracks = new TracksEntity();
         int trackId = 0;
         String sql = "SELECT id, title, singer, duration, album, play_count, date, description, isOffline FROM track WHERE id = ? ";
@@ -270,26 +287,6 @@ public class PlaylistsDAOTest {
         //Assert
         Assertions.assertNotNull(tracks);
     }
-
-//    @Test
-//    void shouldThrowExceptionWhenGetTrack() throws SQLException {
-//        //Arrange
-//        TracksEntity tracks = new TracksEntity();
-//        int trackId = 1;
-//        Mockito.when(mockedResultSet.next()).thenReturn(true);
-//        Mockito.when(mockedResultSet.getInt("track_id")).thenReturn(trackId);
-//        String sql = "SELECT id, title, singer, duration, album, play_count, date, description, isOffline FROM track WHERE id = ? ";
-//        Mockito.when(sut.startQuery(sql)).thenReturn(mockedPreparedStatement);
-//        Mockito.when(mockedPreparedStatement.executeQuery()).thenReturn(mockedResultSet);
-//
-//        //Act
-//        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
-//            sut.getTrack(tracks, mockedResultSet);
-//        });
-//
-//        //Assert
-//        Assertions.assertEquals("Het ophalen van track met id: " + trackId + " is mislukt", exception.getMessage());
-//    }
 
     @Test
     void shouldConvertToTracksEntityWhenConvertToTracksEntity() throws SQLException {
@@ -325,6 +322,7 @@ public class PlaylistsDAOTest {
 
     @Test
     void shouldDeleteTrackFromPlaylistWhenDeleteTrackFromPlaylist() throws SQLException {
+        //Arrange
         int playlistId = 1;
         int trackId = 1;
         String sql = "DELETE FROM playlist_track WHERE playlist_id = ? AND track_id = ?";

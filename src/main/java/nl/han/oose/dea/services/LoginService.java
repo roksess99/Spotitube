@@ -17,9 +17,9 @@ public class LoginService {
 
     public UserEntity validateUser(LoginEntity loginEntity) {
         try {
-            if (loginEntity != null &&
-                    loginEntity.getUser() != null && !loginEntity.getUser().isEmpty() &&
-                    loginEntity.getPassword() != null && !loginEntity.getPassword().isEmpty()) {
+            if (loginEntity != null && loginEntity.getUser() != null &&
+                    !loginEntity.getUser().isEmpty() && loginEntity.getPassword() != null
+                    && !loginEntity.getPassword().isEmpty()) {
 
                 return userDAO.validateUser(loginEntity);
             }
@@ -28,5 +28,4 @@ public class LoginService {
         }
         return null;
     }
-
 }

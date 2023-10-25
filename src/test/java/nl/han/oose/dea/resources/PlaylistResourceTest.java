@@ -40,7 +40,6 @@ public class PlaylistResourceTest {
         Assertions.assertEquals(playlistsEntity, response.getEntity());
     }
 
-
     @Test
     void shouldReturn404WhenPlaylistIsNotFound() {
         //Arrange
@@ -53,7 +52,6 @@ public class PlaylistResourceTest {
         //Assert
         Assertions.assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
         Assertions.assertNull(response.getEntity());
-
     }
 
     @Test
@@ -105,6 +103,7 @@ public class PlaylistResourceTest {
 
     @Test
     void shouldReturn404WhenPlaylistIdIsNotFound() {
+        //Arrange
         String token = "1234-1234-1234";
         PlaylistEntity playlistEntity = new PlaylistEntity();
         Mockito.when(mockedPlaylistsService.deletePlaylist(token, playlistEntity.getId())).thenThrow(new ServiceException("Het verwijderen van playlist met id: " + playlistEntity.getId() + "is niet mogelijk"));
@@ -135,6 +134,7 @@ public class PlaylistResourceTest {
 
     @Test
     void shouldReturn400WhenEditPlaylistObjectIsInvalid() {
+        //Arrange
         String token = "1234-1234-1234";
         PlaylistEntity playlistEntity = new PlaylistEntity();
         Mockito.when(mockedPlaylistsService.editPlaylist(token, playlistEntity)).thenThrow(new ServiceException("Het bijwerken van playlist met id: " + playlistEntity.getId() + " is niet mogelijk"));
@@ -154,7 +154,6 @@ public class PlaylistResourceTest {
         PlaylistEntity playlistEntity = new PlaylistEntity();
         TracksEntity tracks = new TracksEntity();
         Mockito.when(mockedPlaylistsService.getPlaylistTracks(playlistEntity.getId())).thenReturn(tracks);
-
 
         //Act
         Response response = this.sut.getPlaylistTracks(token, playlistEntity.getId());
@@ -178,7 +177,6 @@ public class PlaylistResourceTest {
         Assertions.assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
     }
 
-
     @Test
     void shouldDeleteTrackFromPlaylistWhenDeleteTrackFromPlaylist() {
         //Arrange
@@ -198,6 +196,7 @@ public class PlaylistResourceTest {
 
     @Test
     void shouldReturn404WhenDeleteTrackFromPlaylist() {
+        //Arrange
         String token = "1234-1234-1234";
         PlaylistEntity playlist = new PlaylistEntity();
         TrackEntity track = new TrackEntity();

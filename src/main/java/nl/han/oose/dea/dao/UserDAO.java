@@ -21,17 +21,20 @@ public class UserDAO extends DAO {
             statement.setString(1, loginEntity.getUser());
             statement.setString(2, loginEntity.getPassword());
             ResultSet set = statement.executeQuery();
-
-            while (set.next()) {
-                userEntity.setName(set.getString("name"));
-                userEntity.setUser(set.getString("username"));
-                userEntity.setPassword(set.getString("password"));
-                hasAToken(userEntity);
-            }
+            setToEntity(userEntity, set);
         } catch (SQLException e) {
             throw new DatabaseException("Inloggen mislukt");
         }
         return userEntity;
+    }
+
+    private void setToEntity(UserEntity userEntity, ResultSet set) throws SQLException {
+        while (set.next()) {
+            userEntity.setName(set.getString("name"));
+            userEntity.setUser(set.getString("username"));
+            userEntity.setPassword(set.getString("password"));
+            hasAToken(userEntity);
+        }
     }
 
     private boolean hasAToken(UserEntity userEntity) {
@@ -82,18 +85,20 @@ public class UserDAO extends DAO {
             statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             statement.setString(3, userEntity.getUser());
             statement.execute();
-
-            int rowUpdate = statement.executeUpdate();
-            if (rowUpdate > 0) {
-                userEntity.setToken(token);
-            } else {
-                userEntity.setToken(null);
-            }
-
+            updateRow(userEntity, token, statement);
         } catch (SQLException e) {
             userEntity.setToken(null);
             throw new DatabaseException("Het maken van een token voor gebruiker: " + userEntity.getUser() + " is mislukt");
         }
         return userEntity;
+    }
+
+    private void updateRow(UserEntity userEntity, String token, PreparedStatement statement) throws SQLException {
+        int rowUpdate = statement.executeUpdate();
+        if (rowUpdate > 0) {
+            userEntity.setToken(token);
+        } else {
+            userEntity.setToken(null);
+        }
     }
 }

@@ -30,6 +30,7 @@ public class PlaylistServiceTest {
 
     @Test
     void shouldGetPlaylistsWhenGetPlaylists() {
+        //Arrange
         String token = "1234-1234-1234";
         String user = "mo";
         PlaylistsEntity playlists = new PlaylistsEntity();
@@ -45,7 +46,7 @@ public class PlaylistServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenGetPlaylists(){
+    void shouldThrowExceptionWhenGetPlaylists() {
         //Arrange
         String token = "InvalidToken";
         String user = "mo";
@@ -54,7 +55,7 @@ public class PlaylistServiceTest {
         Mockito.when(sut.getPlaylists(token)).thenThrow(new ServiceException("Het ophalen van playlists is mislukt"));
 
         //Act
-        ServiceException exception = Assertions.assertThrows(ServiceException.class,()->{
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> {
             sut.getPlaylists(token);
         });
 
@@ -84,8 +85,8 @@ public class PlaylistServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAddPlaylist(){
-        //Act
+    void shouldThrowExceptionWhenAddPlaylist() {
+        //Arrange
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setName("test");
         String token = "InvalidToken";
@@ -95,7 +96,7 @@ public class PlaylistServiceTest {
         Mockito.when(sut.getPlaylists(token)).thenThrow(new ServiceException("Playlist: " + playlist.getName() + " toevoegen is niet mogelijk"));
 
         //Act
-        ServiceException exception = Assertions.assertThrows(ServiceException.class,()->{
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> {
             sut.addPlaylist(token, playlist);
         });
 
@@ -125,7 +126,7 @@ public class PlaylistServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWHenDeletePlaylist(){
+    void shouldThrowExceptionWHenDeletePlaylist() {
         //Arrange
         PlaylistEntity playlist = new PlaylistEntity();
         playlist.setId(1);
@@ -136,12 +137,13 @@ public class PlaylistServiceTest {
         Mockito.when(mockedPlaylistDao.getPlaylists(user)).thenReturn(playlists);
         Mockito.when(sut.deletePlaylist(token, playlist.getId())).thenThrow(new ServiceException("Het verwijderen van playlist met id: " + playlist.getId() + "is niet mogelijk"));
 
-        ServiceException exception = Assertions.assertThrows(ServiceException.class, ()->{
+        //Act
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> {
             sut.deletePlaylist(token, playlist.getId());
         });
 
+        //Assert
         Assertions.assertEquals(exception.getMessage(), "Het verwijderen van playlist met id: " + playlist.getId() + "is niet mogelijk");
-
     }
 
     @Test
@@ -158,12 +160,12 @@ public class PlaylistServiceTest {
         //Act
         PlaylistsEntity response = this.sut.editPlaylist(token, playlist);
 
-        //Assertion
+        //Assert
         Assertions.assertEquals(response, playlists);
     }
 
     @Test
-    void shouldThrowExceptionWhenEditPlaylist(){
+    void shouldThrowExceptionWhenEditPlaylist() {
         //Arrange
         PlaylistEntity playlist = new PlaylistEntity();
         PlaylistsEntity playlists = new PlaylistsEntity();
@@ -173,10 +175,12 @@ public class PlaylistServiceTest {
         Mockito.when(mockedPlaylistDao.getPlaylists(user)).thenReturn(playlists);
         Mockito.when(sut.editPlaylist(token, playlist)).thenThrow(new ServiceException("Het bijwerken van playlist met id: " + playlist.getId() + " is niet mogelijk"));
 
-        ServiceException exception = Assertions.assertThrows(ServiceException.class,()->{
+        //Act
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> {
             sut.editPlaylist(token, playlist);
         });
 
+        //Assert
         Assertions.assertEquals(exception.getMessage(), "Het bijwerken van playlist met id: " + playlist.getId() + " is niet mogelijk");
     }
 
@@ -229,5 +233,4 @@ public class PlaylistServiceTest {
         //Assert
         Assertions.assertEquals(response, playlists);
     }
-
 }

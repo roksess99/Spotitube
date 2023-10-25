@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistsEntity {
-    private List<PlaylistEntity> playlists = new ArrayList<>();
+    private final List<PlaylistEntity> playlists = new ArrayList<>();
     private int length;
 
     public PlaylistsEntity() {

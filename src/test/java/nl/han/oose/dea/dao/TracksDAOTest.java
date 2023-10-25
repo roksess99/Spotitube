@@ -28,6 +28,7 @@ public class TracksDAOTest {
 
     @Test
     void shouldGetAllAvailableTracksWhenGetAllAvailableTracks() throws SQLException {
+        //Arrange
         int playlistId = 1;
         TracksEntity tracks;
         String sql = "SELECT * FROM track WHERE id NOT IN (SELECT track_id FROM playlist_track where playlist_id = ? )";
@@ -40,6 +41,7 @@ public class TracksDAOTest {
         //Act
         tracks = this.sut.getAllAvailableTracks(playlistId);
 
+        //Assert
         Assertions.assertNotNull(tracks);
         Assertions.assertEquals(tracks.getTracks().size(), 1);
     }
@@ -52,12 +54,11 @@ public class TracksDAOTest {
         Mockito.when(sut.startQuery(sql)).thenThrow(new DatabaseException("Tracks ophalen is mislukt"));
 
         //Act
-        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, ()->{
-           sut.getAllAvailableTracks(playlistId);
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
+            sut.getAllAvailableTracks(playlistId);
         });
 
         //Assert
-        Assertions.assertEquals(exception.getMessage(),"Tracks ophalen is mislukt" );
-
+        Assertions.assertEquals(exception.getMessage(), "Tracks ophalen is mislukt");
     }
 }

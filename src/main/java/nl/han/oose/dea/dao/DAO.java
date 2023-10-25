@@ -10,10 +10,7 @@ import java.sql.SQLException;
 public class DAO {
     protected PreparedStatement startQuery(String sql) throws SQLException {
         DatabaseProperties databaseProperties = new DatabaseProperties();
-        Connection connection = DriverManager.getConnection(
-                databaseProperties.getDatabaseUrl(),
-                databaseProperties.getDatabaseUsername(),
-                databaseProperties.getDatabasePassword());
+        Connection connection = DriverManager.getConnection(databaseProperties.getDatabaseUrl(), databaseProperties.getDatabaseUsername(), databaseProperties.getDatabasePassword());
         return connection.prepareStatement(sql);
     }
 }

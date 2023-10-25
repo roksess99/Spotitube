@@ -47,7 +47,7 @@ public class UserDAOTest {
         //Act
         UserEntity response = this.sut.validateUser(loginEntity);
 
-        //Assertion
+        //Assert
         Assertions.assertEquals(response.getUser(), user);
         Assertions.assertEquals(response.getPassword(), password);
         Assertions.assertEquals(response.getName(), name);
@@ -83,11 +83,11 @@ public class UserDAOTest {
         Mockito.when(sut.startQuery(sql)).thenThrow(new DatabaseException("Inloggen mislukt"));
 
         //Act
-        DatabaseException exception = Assertions.assertThrows(DatabaseException.class,()->{
-           this.sut.validateUser(loginEntity);
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
+            this.sut.validateUser(loginEntity);
         });
 
-        //Act
+        //Assert
         Assertions.assertEquals(exception.getMessage(), "Inloggen mislukt");
     }
 
@@ -103,7 +103,7 @@ public class UserDAOTest {
         //Act
         UserEntity response = this.sut.setUserToken(userEntity);
 
-        //Assertion
+        //Assert
         Mockito.verify(mockedPreparedStatement).execute();
         Assertions.assertEquals(response.getUser(), userEntity.getUser());
         Assertions.assertNotNull(response.getToken());
@@ -118,7 +118,7 @@ public class UserDAOTest {
         Mockito.doReturn(mockedPreparedStatement).when(sut).startQuery(query);
         Mockito.when(mockedPreparedStatement.executeUpdate()).thenReturn(0);
 
-        //Actmv
+        //Act
         UserEntity response = this.sut.setUserToken(userEntity);
 
         //Assert
@@ -133,7 +133,7 @@ public class UserDAOTest {
         Mockito.when(sut.startQuery(sql)).thenThrow(new DatabaseException("Het maken van een token voor gebruiker: " + userEntity.getUser() + " is mislukt"));
 
         //Act
-        DatabaseException exception = Assertions.assertThrows(DatabaseException.class,()->{
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
             sut.setUserToken(userEntity);
         });
 
@@ -185,7 +185,7 @@ public class UserDAOTest {
         Mockito.when(sut.startQuery(sql)).thenThrow(new DatabaseException("Het ophalen van gebruiker met token: " + token + " is mislukt"));
 
         //Act
-        DatabaseException exception = Assertions.assertThrows(DatabaseException.class,()->{
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
             sut.getUser(token);
         });
 

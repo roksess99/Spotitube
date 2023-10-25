@@ -34,18 +34,22 @@ public class PlaylistsDAO extends DAO {
             PreparedStatement statement = startQuery(query);
             ResultSet set = statement.executeQuery();
 
-            while (set.next()) {
-                int id = set.getInt("id");
-                String name = set.getString("name");
-                String owner = set.getString("owner");
-                isOwner(user, playlistsEntity, id, name, owner);
-                PlaylistEntity playlistEntity = new PlaylistEntity();
-                playlistsEntity.setLength(getPlaylistLength(playlistEntity));
-            }
+            convertToEntity(user, playlistsEntity, set);
         } catch (SQLException e) {
             throw new DatabaseException("Playlists ophalen mislukt");
         }
         return playlistsEntity;
+    }
+
+    private void convertToEntity(String user, PlaylistsEntity playlistsEntity, ResultSet set) throws SQLException {
+        while (set.next()) {
+            int id = set.getInt("id");
+            String name = set.getString("name");
+            String owner = set.getString("owner");
+            isOwner(user, playlistsEntity, id, name, owner);
+            PlaylistEntity playlistEntity = new PlaylistEntity();
+            playlistsEntity.setLength(getPlaylistLength(playlistEntity));
+        }
     }
 
     public int getPlaylistLength(PlaylistEntity playlistEntity) {
@@ -119,7 +123,6 @@ public class PlaylistsDAO extends DAO {
                 PreparedStatement trackStatement = startQuery(sqlTrack);
                 trackStatement.setInt(1, trackId);
                 ResultSet trackSet = trackStatement.executeQuery();
-
                 if (trackSet.next()) {
                     convertToTracksEntity(tracks, trackSet);
                 }
